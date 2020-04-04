@@ -117,5 +117,52 @@ sub dump {
    }
 }
 
-
 1;
+
+################ Documentation ################
+
+=head1 NAME
+
+MetaBookMarks::GitPrompt - provide fancy git prompt.
+
+=head1 SYNOPSIS
+
+use Getopt::Long;
+
+use MetaBookMarks::GitPrompt;
+
+my $warning;
+my $cool;
+my $reset;
+my $debug=0;
+GetOptions ("warning=s" => \$warning,   # String
+            "cool=s"    => \$cool,      # string
+            "reset=s"    => \$reset,    # string
+            "debug=i"   => \$debug)     # Numeric
+or die("Error in command line arguments\n");
+
+
+my $prompt = gitPrompt($warning, $cool, $reset, $debug);
+
+=head1 DESCRIPTION
+
+To use with ZSH them by instance.
+
+=head2 gitPrompt
+
+Output the prompt
+
+Parameters: warn color, green cool, reset color, debug level.
+
+=head2 parseStatusLine
+
+Parses the first line result of git status -b --porcelain 
+
+
+=head2 parseFilesStatus
+
+Parses the individial status of files in the repository, it returns 
+an array of emoij reflecting the state of files
+
+New, conflict etc ...
+
