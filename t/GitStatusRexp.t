@@ -2,7 +2,7 @@ use strict;
 
 use Test;
 
-BEGIN { plan tests => 7 }
+BEGIN { plan tests => 8 }
 
 use MetaBookMarks::GitPrompt;
 
@@ -14,6 +14,7 @@ status('## master...origin/master');
 status('## master...origin/master [ahead 1]', branch => "master", remote => 'origin', n_ahead => 1);
 status('## master...origin/master [ahead 1, behind 1]');
 status('## test', "branch"=> 'test');
+status('## test...origin/test [gone]', branch => 'test', remote => 'origin', gone=>'gone');
 ok(parseStatus('failing'), 0);
 
 
