@@ -4,25 +4,25 @@ use Test;
 
 BEGIN { plan tests => 8 }
 
+use IO::Handle::Util;
 use MetaBookMarks::GitPrompt;
 
 print "#Test GitHelper\n";
 
-ok(parseStatus('## No commits yet on master'));
-status('## master', 'branch' => "master");
-status('## master...origin/master');
-status('## master...origin/master [ahead 1]', branch => "master", remote => 'origin', n_ahead => 1);
-status('## master...origin/master [ahead 1, behind 1]');
-status('## test', "branch"=> 'test');
-status('## test...origin/test [gone]', branch => 'test', remote => 'origin', gone=>'gone');
-ok(parseStatus('failing'), 0);
 
+ok(parseStatusLine('## No commits yet on master'));
+statusLine('## master', 'branch' => "master");
+statusLine('## master...origin/master');
+statusLine('## master...origin/master [ahead 1]', branch => "master", remote => 'origin', n_ahead => 1);
+statusLine('## master...origin/master [ahead 1, behind 1]');
+statusLine('## test', "branch"=> 'test');
+statusLine('## test...origin/test [gone]', branch => 'test', remote => 'origin', gone=>'gone');
+ok(parseStatusLine('failing'), 0);
 
-
-sub status {
+sub statusLine {
     my $line = shift;
     my %expected = @_;
-    my $parsed=parseStatus($line);
+    my $parsed=parseStatusLine($line);
 
     return ok($parsed) unless %expected;
 
