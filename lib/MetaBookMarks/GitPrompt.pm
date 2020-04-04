@@ -1,6 +1,6 @@
 package MetaBookMarks::GitPrompt;
 
-# ABSTRACT: turns baubles into trinkets
+# ABSTRACT: git porcelain command result parser.
 use strict;
 use warnings;
 
@@ -14,8 +14,9 @@ sub parseStatus {
         'branch' => "No commit",
         'icon' => " 🆕 "
     } if $line eq '## No commits yet on master';
-    if($line =~ m!^##\s([\w\-]+(?:\.[\w\-]+)*)(?:\.\.\.([\w\-\.]+)/([\w\-\.]+)(?:\s(?:\[(?:(?:(ahead)\s(\d+))?(?:,\s)?(?:(behind)\s(\d+))?|(gone))?\])?)?)?!){
-    #                  ]_________ 1 _________[         ]___ 2 ___[ ]___ 3 ___[                ]_ 4 _[  ]_5_[             ]___6__[  ]_7_[   ]_ 8_[ 
+    my $branch = '[\w\-]+(?:\.[\w\-]+)*';
+    if($line =~ m!^##\s($branch)(?:\.\.\.($branch)/($branch)(?:\s(?:\[(?:(?:(ahead)\s(\d+))?(?:,\s)?(?:(behind)\s(\d+))?|(gone))?\])?)?)?!){
+    #                  ]___1___[         ]__ 2 __[ ]__ 3 __[                ]_ 4 _[  ]_5_[             ]___6__[  ]_7_[   ]_ 8_[ 
       my $r = {'branch' => $1};
       my $opt = sub {$r->{$_[0]} = $_[1] if $_[1]};
       $opt->('remote', $2);

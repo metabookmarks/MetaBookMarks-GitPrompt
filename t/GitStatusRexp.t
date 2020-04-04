@@ -2,16 +2,35 @@ use strict;
 
 use Test;
 
-BEGIN { plan tests => 6, todo => [7] }
+BEGIN { plan tests => 7 }
 
 use MetaBookMarks::GitPrompt;
 
 print "#Test GitHelper\n";
 
 ok(parseStatus('## No commits yet on master'));
-ok(parseStatus('## master')->{branch}, "master");
-ok(parseStatus('## master...origin/master'));
-ok(parseStatus('## master...origin/master [ahead 1]')->{n_ahead}, 1);
-ok(parseStatus('## master...origin/master [ahead 1, behind 1]'));
-ok(parseStatus('failing') == 0);
+status('## master', 'branch' => "master");
+status('## master...origin/master');
+status('## master...origin/master [ahead 1]', branch => "master", remote => 'origin', n_ahead => 1);
+status('## master...origin/master [ahead 1, behind 1]');
+status('## test', "branch"=> 'test');
+ok(parseStatus('failing'), 0);
 
+
+
+sub status {
+    my $line = shift;
+    my %expected = @_;
+    my $parsed=parseStatus($line);
+
+    return ok($parsed) unless %expected;
+
+    my $unparsedStr;
+    my $expectedStr;
+    for my $k (keys %expected){
+      $unparsedStr .= $k.": ".$parsed->{$k}.', ';
+      $expectedStr .= $k.": ".$expected{$k}.', ';
+    }
+
+    ok($unparsedStr,$expectedStr)
+}
