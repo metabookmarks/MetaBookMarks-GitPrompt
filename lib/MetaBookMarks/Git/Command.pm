@@ -16,8 +16,16 @@ sub new {
 sub readLine {
   my $this = shift;
   my $fh = $this->{fh}; 
-  <$fh>
+  if($this->{repo}->{debug}){
+    my $line = <$fh>;
+    warn $line."\n";
+    $line
+  }else{
+    <$fh>
+  }
 }
+
+sub eof { $_[0]->{fh}->eof }
 
 sub close {
   my $this = shift;

@@ -21,7 +21,7 @@ sub gitPrompt {
   my $repo = MetaBookMarks::Git->repository() 
    || exit(0);
 
-  my $cmd = $repo->command('status', '-b', '--porcelain');
+  my $cmd = $repo->openCommand('status', '-b', '--porcelain');
   
   my $head = $cmd->readLine();
   
@@ -64,34 +64,7 @@ sub warning {
    $warning, @_, $reset;
 }
 
-sub parseStatusLine {
-    my $line = shift;
-    return {
-        'branch' => "No commit",
-        'icon' => " 🆕 "
-    } if $line eq '## No commits yet on master';
-    my $branch = '[\w\-]+(?:\.[\w\-]+)*';
-    if($line =~ m!^##\s($branch)(?:\.\.\.($branch)/($branch)(?:\s(?:\[(?:(?:(ahead)\s(\d+))?(?:,\s)?(?:(behind)\s(\d+))?|(gone))?\])?)?)?!){
-    #                  ]___1___[         ]__ 2 __[ ]__ 3 __[                ]_ 4 _[  ]_5_[             ]___6__[  ]_7_[   ]_ 8_[ 
-      if(wantarray){
-        return ($1,$2,$3,$4,$5,$6,$7,$8)
-      }else{
-        my $r = {'branch' => $1};
-        my $opt = sub {$r->{$_[0]} = $_[1] if $_[1]};
-        $opt->('remote', $2);
-        $opt->('remote_branch', $3);
-        $opt->('is_ahead', $4);
-        $opt->('n_ahead', $5);
-        $opt->('is_behind', $6);
-        $opt->('n_behind', $7);
-        $opt->('gone', $8);
-#      $opt->('icon'," 💚 ");
-      return $r
-      }
-    }else{
-      0
-    }    
-}
+
 
 sub parseFilesStatus {
   my $cmd = shift;

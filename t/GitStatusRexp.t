@@ -5,7 +5,7 @@ use Test;
 BEGIN { plan tests => 8 }
 
 use IO::Handle::Util;
-use MetaBookMarks::GitPrompt;
+use MetaBookMarks::Git;
 
 print "#Test GitHelper\n";
 
@@ -17,7 +17,8 @@ statusLine('## master...origin/master [ahead 1]', branch => "master", remote => 
 statusLine('## master...origin/master [ahead 1, behind 1]');
 statusLine('## test', "branch"=> 'test');
 statusLine('## test...origin/test [gone]', branch => 'test', remote => 'origin', gone=>'gone');
-ok(parseStatusLine('failing'), 0);
+statusLine('## HEAD (no branch)', detachedHead=>1);
+#ok(parseStatusLine('failing'), 0);
 
 sub statusLine {
     my $line = shift;
