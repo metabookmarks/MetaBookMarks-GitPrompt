@@ -1,1 +1,3 @@
 .build/
+MetaBookMarks-GitPrompt-*/
+*.tar.gz
