@@ -16,7 +16,7 @@ fileStatus(["?? An untracked file", " M Modified file","M Staged file"], '👀',
 sub fileStatus {
   my $lines = shift;
   my @expected = @_;
-  my @status = parseFilesStatus(IO::Handle::Util::io_from_array($lines));
+  my @status = parseFilesStatus({fh=>IO::Handle::Util::io_from_array($lines)});
   
   return ok(join(' ', @status)) unless @expected;
 
