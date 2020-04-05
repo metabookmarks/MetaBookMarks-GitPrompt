@@ -4,7 +4,8 @@ package MetaBookMarks::GitPrompt;
 use strict;
 use warnings;
 
-use Git;
+use MetaBookMarks::Git;
+
 
 use Exporter qw(import);
  
@@ -15,18 +16,18 @@ our ($warning, $cool, $reset,$debug);
 sub gitPrompt {
   ($warning, $cool, $reset,$debug) = @_;
 
-  my $repo = Git->repository;
-  my ($git, $ctx) = $repo->command_output_pipe('status', '-b', '--porcelain');
-
+  my $repo = MetaBookMarks::Git->repository() 
+   || exit(0);
+  my $cmd = $repo->command('status', '-b', '--porcelain');
   
-  my $head = <$git>;
-  print(parseFilesStatus($git));
+  my $head = $cmd->readLine();
+  print(parseFilesStatus($cmd));
   
-  print $warning, ' ±', $cool, '±', $reset;
+  print $warning, '±', $cool, '±', $reset;
 
   printStatusLine(parseStatusLine($head));
   
-  $repo->command_close_pipe($git, $ctx);
+  $cmd->close()
 
   
 }
@@ -92,7 +93,8 @@ sub parseStatusLine {
 }
 
 sub parseFilesStatus {
-  my $git = shift;
+  my $cmd = shift;
+  my $git = $cmd->{fh};
   my @checks = (
     sub {$_[0] =~ /^[AMRD]/ && "🚀"},       #STAGED 
     sub {$_[0] =~/^.[MTD]/ && "🚧"},        #UNSTAGED
