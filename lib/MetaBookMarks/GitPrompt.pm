@@ -41,7 +41,7 @@ sub printStatusLine {
   
   push @remote, "$n_ahead⬆️" if $is_ahead;
   push @remote, "$n_behind⬇️" if $is_behind;
-  print ' - ', join(' 🔥', @remote), " - " if @remote;
+  print ' - ', join(' 🔥', @remote) if @remote;
     
   my @branch=();
 
@@ -114,6 +114,7 @@ sub parseFilesStatus {
         }
     }
   }
+  push @states, ' - ' if @states;
   @states
 }
 
