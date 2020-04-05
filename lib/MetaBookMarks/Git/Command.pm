@@ -21,7 +21,18 @@ sub readLine {
 
 sub close {
   my $this = shift;
-  $this->{repo}->command_close_pipe($this->{fh}, $this->{ctx})
+  return unless exists $this->{fh};
+
+  my $fh = delete($this->{fh});
+  my $ctx = delete($this->{ctx});
+
+  $this->{repo}->command_close_pipe($fh, $ctx);
+  return 1
+}
+
+sub DESTROY {
+  my $this = shift;
+  $this->close()
 }
 
 1;

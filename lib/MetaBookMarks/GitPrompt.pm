@@ -4,6 +4,8 @@ package MetaBookMarks::GitPrompt;
 use strict;
 use warnings;
 
+use Try::Tiny;
+
 use MetaBookMarks::Git;
 
 
@@ -18,18 +20,17 @@ sub gitPrompt {
 
   my $repo = MetaBookMarks::Git->repository() 
    || exit(0);
+
   my $cmd = $repo->command('status', '-b', '--porcelain');
   
   my $head = $cmd->readLine();
+  
   print(parseFilesStatus($cmd));
   
   print $warning, '±', $cool, '±', $reset;
 
   printStatusLine(parseStatusLine($head));
-  
-  $cmd->close()
-
-  
+    
 }
 
 
